@@ -1,0 +1,19 @@
+{
+  "name": "graphql-codegen-contentful-mdx-slides",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "start": "mdx-deck ../graphql-codegen-contentful-mdx-slides/deck.mdx",
+    "build": "mdx-deck build ../graphql-codegen-contentful-mdx-slides/deck.mdx"
+  },
+  "devDependencies": {
+    "code-surfer": "^3.1.1",
+    "mdx-deck": "3.1.0",
+    "prettier": "^2.1.2",
+    "prismjs": "^1.21.0"
+  },
+  "resolutions": {
+    "mdx-deck/gatsby": "2.24.62"
+  }
+}
