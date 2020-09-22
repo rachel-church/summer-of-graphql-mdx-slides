@@ -36,3 +36,4 @@ curl $base_url/step6/addApolloPlugin/src/App.tsx -o src/step6/App.tsx
 curl $base_url/step6/addApolloPlugin/codegen.yml -o src/step6/codegen.yml
 
 curl $base_url/step7/useGraphqlFile/codegen.yml -o src/step7/codegen.yml
+curl $base_url/step7/useGraphqlFile/App.tsx -o src/step7/App.tsx
