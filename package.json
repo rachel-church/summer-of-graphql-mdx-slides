@@ -5,7 +5,7 @@
   "license": "MIT",
   "scripts": {
     "start": "mdx-deck deck.mdx",
-    "build": "rimraf docs && mdx-deck build deck.mdx && mv public docs"
+    "build": "mdx-deck build deck.mdx"
   },
   "devDependencies": {
     "code-surfer": "^3.1.1",
