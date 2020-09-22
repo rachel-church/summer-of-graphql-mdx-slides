@@ -4,6 +4,7 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
+    "getSrcFiles": "sh getSrcFiles.sh",
     "start": "mdx-deck deck.mdx",
     "build": "mdx-deck build deck.mdx"
   },

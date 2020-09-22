@@ -55,7 +55,7 @@ yarn add -D typescript @types/node @types/react @types/react-dom @types/jest
 
 <CodeSurfer>
 
-```js title="Connecting to Contentful" subtitle="Add Contentful credentials to .env file"
+```js title=".env" subtitle="Adding Contentful credentials"
 REACT_APP_CONTENTFUL_SPACE_ID=z1e74uympjtv
 REACT_APP_CONTENTFUL_ENVIRONMENT=master
 REACT_APP_CONTENTFUL_API_KEY=hOSyAyj25eyBNh3tRBScPJLu40SRSx-EgjWGTdtrA98
@@ -67,41 +67,17 @@ REACT_APP_CONTENTFUL_API_KEY=hOSyAyj25eyBNh3tRBScPJLu40SRSx-EgjWGTdtrA98
 
 <CodeSurfer>
 
-```ts title="Making a graphQL request" subtitle="result has the implicit type 'any'"
-// Utilize the environment variables defined in the `.env` file
-const SPACE_ID = process.env.REACT_APP_CONTENTFUL_SPACE_ID;
-const ENVIRONMENT = process.env.REACT_APP_CONTENTFUL_ENVIRONMENT;
-const API_KEY = process.env.REACT_APP_CONTENTFUL_API_KEY;
-
-// result is implicit type 'any'
-const result = await fetch(
-  `https://graphql.contentful.com/content/v1/spaces/${SPACE_ID}/environments/${ENVIRONMENT}`,
-  {
-    method: 'POST',
-    headers: { Authorization: `Bearer ${API_KEY}` },
-    body: JSON.stringify({ query: 'dogToy (id: "4ZmUXz3NbfISg0l7Bui7cu") { toyName }' }),
-  }
-).then((res) => res.json());
+```ts 13:24 showNumbers title="src/App.tsx" file="src/step0/App.jsx" subtitle="Our query to get all toys"
 ```
 
-```ts title="Making a graphQL request" subtitle="create a type to represent the response"
-// Utilize the environment variables defined in the `.env` file
-const SPACE_ID = process.env.REACT_APP_CONTENTFUL_SPACE_ID;
-const ENVIRONMENT = process.env.REACT_APP_CONTENTFUL_ENVIRONMENT;
-const API_KEY = process.env.REACT_APP_CONTENTFUL_API_KEY;
-
-type DogToy = { toyName: string };
-
-const result: DogToy = await fetch(
-  `https://graphql.contentful.com/content/v1/spaces/${SPACE_ID}/environments/${ENVIRONMENT}`,
-  {
-    method: 'POST',
-    headers: { Authorization: `Bearer ${API_KEY}` },
-    body: JSON.stringify({ query: 'dogToy (id: "4ZmUXz3NbfISg0l7Bui7cu") { toyName }' }),
-  }
-).then((res) => res.json());
+```ts 42:57 showNumbers title="src/App.tsx" file="src/step0/App.jsx" subtitle="Utilizing fetch to send the request then updating state"
 ```
 
+```ts 27:32 showNumbers title="src/App.tsx" file="src/step0/App.jsx" subtitle="Our state initialization"
+```
+
+```ts 26:52 showNumbers title="src/App.tsx" file="src/step1/App.tsx" subtitle="Adding a custom type to define the shape of our state"
+```
 </CodeSurfer>
 
 ---
@@ -109,11 +85,11 @@ const result: DogToy = await fetch(
 <CodeSurfer>
 
 ```bash title="Install graphql-codegen"
-npm install --save-dev @graphql-codegen/cli @graphql-codegen/typescript
+npm install --save-dev @graphql-codegen/cli graphql @graphql-codegen/typescript
 
 # or
 
-yarn add -D @graphql-codegen/cli @graphql-codegen/typescript
+yarn add -D @graphql-codegen/cli graphql @graphql-codegen/typescript
 ```
 
 </CodeSurfer>
@@ -122,16 +98,7 @@ yarn add -D @graphql-codegen/cli @graphql-codegen/typescript
 
 <CodeSurfer>
 
-```yml title="Create a codegen.yml file to configure codegen"
-overwrite: true
-schema:
-  - https://graphql.contentful.com/content/v1/spaces/${REACT_APP_CONTENTFUL_SPACE_ID}/environments/${REACT_APP_CONTENTFUL_ENVIRONMENT}:
-      headers:
-        Authorization: "Bearer ${REACT_APP_CONTENTFUL_API_KEY}"
-generates:
-  src/schema.ts:
-    plugins:
-      - typescript
+```yml showNumbers title="codegen.yml" file="src/step2/codegen.yml" subtitle="Configure codegen"
 ```
 
 </CodeSurfer>
@@ -140,10 +107,22 @@ generates:
 
 <CodeSurfer>
 
-```json title="Add a script to your package.json"
+```json 3 title="package.json" subtitle="Add a script to generate src/schema.ts"
 {
   "scripts": {
-    "gen": "graphql-codegen --config codegen.yml --require dotenv/config"
+    "gen": "graphql-codegen --config codegen.yml --require dotenv/config",
+    "start": "react-scripts start",
+    "build": "react-scripts build"
+  }
+}
+```
+
+```json 3:5 title="package.json" subtitle="Ensure this step is ran before starting the app"
+{
+  "scripts": {
+    "gen": "graphql-codegen --config codegen.yml --require dotenv/config",
+    "start": "yarn gen && react-scripts start",
+    "build": "yarn gen && react-scripts build"
   }
 }
 ```
@@ -154,7 +133,7 @@ generates:
 
 <CodeSurfer>
 
-```bash title="Run the script to generate src/schema.ts"
+```bash title="Restart the app OR run the script to generate src/schema.ts"
 npm run gen
 
 # or
@@ -168,21 +147,7 @@ yarn gen
 
 <CodeSurfer>
 
-```ts title="src/schema.ts"
-/**
- * an assortment of toys for my new puppy [See type
- * definition](https://app.contentful.com/spaces/z1e74uympjtv/content_types/dogToy)
- */
-export type DogToy = Entry & {
-  __typename?: 'DogToy';
-  sys: Sys;
-  linkedFrom?: Maybe<DogToyLinkingCollections>;
-  toyName?: Maybe<Scalars['String']>;
-  toyPhoto?: Maybe<Asset>;
-  puppyPhoto?: Maybe<Asset>;
-  estimatedPrice?: Maybe<Scalars['Float']>;
-  linkToBuy?: Maybe<Scalars['String']>;
-};
+```ts 230:248 showNumbers title="src/schema.ts" file="src/step2/schema.ts"
 ```
 
 </CodeSurfer>
@@ -191,54 +156,80 @@ export type DogToy = Entry & {
 
 <CodeSurfer>
 
-```ts subtitle="Our current code"
-// ...
-
-type DogToy = { toyName: string };
-
-const result: DogToy = await fetch(
-  `https://graphql.contentful.com/content/v1/spaces/${SPACE_ID}/environments/${ENVIRONMENT}`,
-  {
-    method: 'POST',
-    headers: { Authorization: `Bearer ${API_KEY}` },
-    body: JSON.stringify({ query: 'dogToy (id: "4ZmUXz3NbfISg0l7Bui7cu") { toyName }' }),
-  }
-).then((res) => res.json());
+```ts 26:52 showNumbers title="src/App.tsx" file="src/step1/App.tsx" subtitle="Our current code"
 ```
 
-```ts subtitle="Using the auto-generated DogToy type"
-import { DogToy } from 'schema';
-
-// ...
-
-const result: DogToy = await fetch(
-  `https://graphql.contentful.com/content/v1/spaces/${SPACE_ID}/environments/${ENVIRONMENT}`,
-  {
-    method: 'POST',
-    headers: { Authorization: `Bearer ${API_KEY}` },
-    body: JSON.stringify({ query: 'dogToy (id: "4ZmUXz3NbfISg0l7Bui7cu") { toyName }' }),
-  }
-).then((res) => res.json());
+```ts 2,28:42 showNumbers title="src/App.tsx" file="src/step2/App.tsx" subtitle="Import and use DogToyCollection from schema.ts"
 ```
 
-```ts subtitle="More specific usage of the DogToy type"
-import { DogToy } from 'schema';
+```ts 28:42 showNumbers title="src/App.tsx" file="src/step2/App.tsx" subtitle="Using DogToyCollection"
+```
 
-// ...
-
-type GetToysQuery = Pick<DogToy, 'toyName'>; // pick a set of properties from DogToy
-
-const result: GetToysQuery = await fetch(
-  `https://graphql.contentful.com/content/v1/spaces/${SPACE_ID}/environments/${ENVIRONMENT}`,
-  {
-    method: 'POST',
-    headers: { Authorization: `Bearer ${API_KEY}` },
-    body: JSON.stringify({ query: 'dogToy (id: "4ZmUXz3NbfISg0l7Bui7cu") { toyName }' }),
-  }
-).then((res) => res.json());
+```ts 26:52 showNumbers title="src/App.tsx" file="src/step1/App.tsx" subtitle="Before.."
 ```
 
 </CodeSurfer>
+
+---
+
+Can we make this smarter?
+
+---
+
+---
+
+What could Apollo Client give us?
+
+- parsing of our graphQL queries
+- intelligent caching
+- less code - utilize the useQuery Hook
+
+---
+
+```bash title="Install Apollo Client"
+npm install --save-dev @apollo/client
+
+# or
+
+yarn add -D typescript @apollo/client
+```
+
+---
+
+<CodeSurfer>
+
+```ts showNumbers title="src/index.tsx" file="src/step2/index.tsx" subtitle="Our current code"
+```
+
+```ts showNumbers title="src/index.tsx" file="src/step3/index.tsx" subtitle="Add and configure ApolloProvider"
+```
+
+</CodeSurfer>
+
+---
+
+<CodeSurfer>
+
+```ts 35:71 showNumbers title="src/App.tsx" file="src/step2/App.tsx" subtitle="Our current code"
+```
+
+```ts 39 showNumbers title="src/App.tsx" file="src/step3/App.tsx" subtitle="Utilizing apollo client"
+```
+
+```ts 16:29 showNumbers title="src/App.tsx" file="src/step3/App.tsx" subtitle="useQuery expects a GraphQL AST"
+```
+
+```ts 18:39 showNumbers title="src/App.tsx" file="src/step3/App.tsx" subtitle="What if we want to add a graphql variable?"
+```
+
+```ts 18:47 showNumbers title="src/App.tsx" file="src/step4/App.tsx" subtitle="Declarative usage of graphql variables"
+```
+
+</CodeSurfer>
+
+---
+
+Let's utilize codegen to create the types for us
 
 ---
 
@@ -258,30 +249,10 @@ yarn add -D @graphql-codegen/typescript-operations
 
 <CodeSurfer>
 
-```yml title="codegen.yml" subtitle="Our current codegen config"
-overwrite: true
-schema:
-  - https://graphql.contentful.com/content/v1/spaces/${REACT_APP_CONTENTFUL_SPACE_ID}/environments/${REACT_APP_CONTENTFUL_ENVIRONMENT}:
-      headers:
-        Authorization: "Bearer ${REACT_APP_CONTENTFUL_API_KEY}"
-generates:
-  src/schema.ts:
-    plugins:
-      - typescript
+```yml showNumbers title="codegen.yml" file="src/step2/codegen.yml" subtitle="Our current codegen configuration"
 ```
 
-```yml title="codegen.yml" subtitle="Adding a new plugin"
-overwrite: true
-schema:
-  - https://graphql.contentful.com/content/v1/spaces/${REACT_APP_CONTENTFUL_SPACE_ID}/environments/${REACT_APP_CONTENTFUL_ENVIRONMENT}:
-      headers:
-        Authorization: "Bearer ${REACT_APP_CONTENTFUL_API_KEY}"
-documents: "src/**/!(*.d).{ts,tsx}"
-generates:
-  src/schema.ts:
-    plugins:
-      - typescript
-      - typescript-operations
+```yml showNumbers title="codegen.yml" file="src/step5/codegen.yml" subtitle="Add the typescript-operations plugin"
 ```
 
 </CodeSurfer>
@@ -290,7 +261,7 @@ generates:
 
 <CodeSurfer>
 
-```bash title="Run the script to re-generate src/schema.ts"
+```bash title="Restart the app OR run the script to re-generate src/schema.ts"
 npm run gen
 
 # or
@@ -304,298 +275,23 @@ yarn gen
 
 <CodeSurfer>
 
-```ts title="src/schema.ts"
-// ...
+```ts 31:43 showNumbers title="src/App.tsx" file="src/step4/App.tsx" subtitle="Our current code"
+```
 
-export type DogToy = Entry & {
-  __typename?: 'DogToy';
-  sys: Sys;
-  linkedFrom?: Maybe<DogToyLinkingCollections>;
-  toyName?: Maybe<Scalars['String']>;
-  toyPhoto?: Maybe<Asset>;
-  puppyPhoto?: Maybe<Asset>;
-  estimatedPrice?: Maybe<Scalars['Float']>;
-  linkToBuy?: Maybe<Scalars['String']>;
-};
-
-export type GetToysQuery = (
-  { __typename?: 'Query' }
-  & { dogToyCollection?: Maybe<(
-    { __typename?: 'DogToyCollection' }
-    & { items: Array<Maybe<(
-      { __typename?: 'DogToy' }
-      & Pick<DogToy, 'toyName'>
-    )>> }
-  )> }
-);
-
-// ...
+```ts 31:32 showNumbers title="src/App.tsx" file="src/step5/App.tsx" subtitle="Utilizing the types from schema.ts"
 ```
 
 </CodeSurfer>
 
 ---
 
-<CodeSurfer>
-
-```ts subtitle="Our current code"
-import { DogToy } from 'schema';
-
-// ...
-
-type GetToysQuery = Pick<DogToy, 'toyName'>; // pick a set of properties from DogToy
-
-const result: GetToysQuery = await fetch(
-  `https://graphql.contentful.com/content/v1/spaces/${SPACE_ID}/environments/${ENVIRONMENT}`,
-  {
-    method: 'POST',
-    headers: { Authorization: `Bearer ${API_KEY}` },
-    body: JSON.stringify({ query: 'dogToy (id: "4ZmUXz3NbfISg0l7Bui7cu") { toyName }' }),
-  }
-).then((res) => res.json());
-```
-
-```ts subtitle="using the auto-generated GetToysQuery type"
-import { GetToysQuery } from 'schema';
-
-// ...
-
-const result: GetToysQuery = await fetch(
-  `https://graphql.contentful.com/content/v1/spaces/${SPACE_ID}/environments/${ENVIRONMENT}`,
-  {
-    method: 'POST',
-    headers: { Authorization: `Bearer ${API_KEY}` },
-    body: JSON.stringify({ query: 'dogToy (id: "4ZmUXz3NbfISg0l7Bui7cu") { toyName }' }),
-  }
-).then((res) => res.json());
-```
-
-</CodeSurfer>
-
----
-
-What if you want to use Apollo Client in your React app?
+We can use codegen to simplify this even more!
 
 ---
 
 <CodeSurfer>
 
-```tsx title="index.tsx" subtitle="Our current code"
-import React from 'react';
-import ReactDOM from 'react-dom';
-import App from './App';
-
-ReactDOM.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>,
-  document.getElementById('root')
-);
-```
-
-```tsx title="index.tsx" subtitle="Add an ApolloProvider"
-import React from 'react';
-import ReactDOM from 'react-dom';
-import App from './App';
-import { ApolloClient, ApolloProvider, InMemoryCache } from '@apollo/client';
-
-// Utilize the environment variables defined in the `.env` file
-const {
-  REACT_APP_CONTENTFUL_SPACE_ID: SPACE_ID,
-  REACT_APP_CONTENTFUL_ENVIRONMENT: ENVIRONMENT,
-  REACT_APP_CONTENTFUL_API_KEY: API_KEY,
-} = process.env;
-
-export const apolloClient = new ApolloClient({
-  uri: `https://graphql.contentful.com/content/v1/spaces/${SPACE_ID}/environments/${ENVIRONMENT}`,
-  headers: {
-    Authorization: `Bearer ${API_KEY}`,
-  },
-  cache: new InMemoryCache(),
-});
-
-ReactDOM.render(
-  <React.StrictMode>
-    <ApolloProvider client={apolloClient}>
-      <App />
-    </ApolloProvider>
-  </React.StrictMode>,
-  document.getElementById('root')
-);
-```
-
-</CodeSurfer>
-
----
-
-<CodeSurfer>
-
-```ts subtitle="Our current code"
-import { GetToysQuery } from 'schema';
-
-// ...
-
-const result: GetToysQuery = await fetch(
-  `https://graphql.contentful.com/content/v1/spaces/${SPACE_ID}/environments/${ENVIRONMENT}`,
-  {
-    method: 'POST',
-    headers: { Authorization: `Bearer ${API_KEY}` },
-    body: JSON.stringify({ query: 'dogToy (id: "4ZmUXz3NbfISg0l7Bui7cu") { toyName }' }),
-  }
-).then((res) => res.json());
-```
-
-```ts subtitle="Utilizing apollo client"
-import { Unnamed_1_Query } from 'schema';
-
-import { useQuery } from '@apollo/client';
-import { gql } from 'graphql.macro';
-
-const GET_DOG_TOY = gql`
-  query {
-    dogToy(id: "4ZmUXz3NbfISg0l7Bui7cu") {
-      toyName
-    }
-  }
-`;
-
-// ...
-
-const { loading, error, data } = useQuery<Unnamed_1_Query>(GET_DOG_TOY);
-```
-
-```ts subtitle="Need to give our query a name"
-import { GetGreenieToyQuery } from 'schema';
-
-import { useQuery } from '@apollo/client';
-import { gql } from 'graphql.macro';
-
-const GET_DOG_TOY = gql`
-  query getGreenieToy {
-    dogToy(id: "4ZmUXz3NbfISg0l7Bui7cu") {
-      toyName
-    }
-  }
-`;
-
-// ...
-
-const { loading, error, data } = useQuery<GetGreenieToyQuery>(GET_DOG_TOY);
-```
-
-</CodeSurfer>
-
----
-
-What if you want to store your graphQL queries in *.graphql files?
-
----
-
-<CodeSurfer>
-
-```graphql title="getGreenieToy.graphql"
-query getGreenieToy {
-  dogToy(id: "4ZmUXz3NbfISg0l7Bui7cu") {
-    toyName
-  }
-}
-```
-
-</CodeSurfer>
-
----
-
-<CodeSurfer>
-
-```yml title="codegen.yml"
-overwrite: true
-schema:
-  - https://graphql.contentful.com/content/v1/spaces/${REACT_APP_CONTENTFUL_SPACE_ID}/environments/${REACT_APP_CONTENTFUL_ENVIRONMENT}:
-    headers:
-      Authorization: "Bearer ${REACT_APP_CONTENTFUL_API_KEY}"
-documents: "src/**/!(*.d).{ts,tsx}"
-generates:
-  src/schema.ts:
-    plugins:
-      - typescript
-      - typescript-operations
-```
-
-```yml title="codegen.yml"
-overwrite: true
-schema:
-  - https://graphql.contentful.com/content/v1/spaces/${REACT_APP_CONTENTFUL_SPACE_ID}/environments/${REACT_APP_CONTENTFUL_ENVIRONMENT}:
-    headers:
-      Authorization: "Bearer ${REACT_APP_CONTENTFUL_API_KEY}"
-documents:
-  - "src/**/!(*.d).{ts,tsx}"
-  - "src/**/*.graphql"
-generates:
-  src/schema.ts:
-    plugins:
-      - typescript
-      - typescript-operations
-```
-
-</CodeSurfer>
-
----
-
-<CodeSurfer>
-
-```bash title="Run the script to generate src/schema.ts"
-npm run gen
-
-# or
-
-yarn gen
-```
-
-</CodeSurfer>
-
----
-
-<CodeSurfer>
-
-```ts subtitle="Our current code"
-import { GetGreenieToyQuery } from 'schema';
-
-import { useQuery } from '@apollo/client';
-import { gql } from 'graphql.macro';
-
-const GET_DOG_TOY = gql`
-  query getGreenieToy {
-    dogToy(id: "4ZmUXz3NbfISg0l7Bui7cu") {
-      toyName
-    }
-  }
-`;
-
-// ...
-
-const { loading, error, data } = useQuery<GetGreenieToyQuery>(GET_DOG_TOY);
-```
-
-```ts subtitle="Import our graphQL file"
-import { GetGreenieToyQuery } from 'schema';
-
-import { useQuery } from '@apollo/client';
-import { loader } from 'graphql.macro';
-
-const GET_DOG_TOY = loader('./getGreenieToy.graphql');
-
-// ...
-
-const { loading, error, data } = useQuery<GetGreenieToyQuery>(GET_DOG_TOY);
-```
-
-</CodeSurfer>
-
----
-
-<CodeSurfer>
-
-```bash title="Install typescript-react-apollo plugin"
+```bash title="Install typescript-operations plugin"
 npm install --save-dev @graphql-codegen/typescript-react-apollo
 
 # or
@@ -609,37 +305,10 @@ yarn add -D @graphql-codegen/typescript-react-apollo
 
 <CodeSurfer>
 
-```yml title="codegen.yml"
-overwrite: true
-schema:
-  - https://graphql.contentful.com/content/v1/spaces/${REACT_APP_CONTENTFUL_SPACE_ID}/environments/${REACT_APP_CONTENTFUL_ENVIRONMENT}:
-    headers:
-      Authorization: "Bearer ${REACT_APP_CONTENTFUL_API_KEY}"
-documents:
-  - "src/**/!(*.d).{ts,tsx}"
-  - "src/**/*.graphql"
-generates:
-  src/schema.ts:
-    plugins:
-      - typescript
-      - typescript-operations
+```yml showNumbers title="codegen.yml" file="src/step5/codegen.yml" subtitle="Our current codegen configuration"
 ```
 
-```yml title="codegen.yml"
-overwrite: true
-schema:
-  - https://graphql.contentful.com/content/v1/spaces/${REACT_APP_CONTENTFUL_SPACE_ID}/environments/${REACT_APP_CONTENTFUL_ENVIRONMENT}:
-    headers:
-      Authorization: "Bearer ${REACT_APP_CONTENTFUL_API_KEY}"
-documents:
-  - "src/**/!(*.d).{ts,tsx}"
-  - "src/**/*.graphql"
-generates:
-  src/schema.tsx:
-    plugins:
-      - typescript
-      - typescript-operations
-      - typescript-react-apollo
+```yml showNumbers title="codegen.yml" file="src/step6/codegen.yml" subtitle="Add the typescript-react-apollo plugin"
 ```
 
 </CodeSurfer>
@@ -648,7 +317,7 @@ generates:
 
 <CodeSurfer>
 
-```bash title="Run the script to generate src/schema.ts"
+```bash title="Restart the app OR run the script to re-generate src/schema.tsx"
 npm run gen
 
 # or
@@ -662,10 +331,26 @@ yarn gen
 
 <CodeSurfer>
 
-```ts title="src/schema.tsx" subtitle="useGetGreenieToyQuery was auto-created for us!"
-export function useGetGreenieToyQuery(baseOptions?: Apollo.QueryHookOptions<GetGreenieToyQuery, GetGreenieToyQueryVariables>) {
-  return Apollo.useQuery<GetGreenieToyQuery, GetGreenieToyQueryVariables>(GetGreenieToyDocument, baseOptions);
-}
+```ts 32 showNumbers title="src/App.tsx" file="src/step5/App.tsx" subtitle="Our current code"
+```
+
+```ts showNumbers title="src/App.tsx" file="src/step6/App.tsx" subtitle="Utilizing the types from schema.tsx"
+```
+
+</CodeSurfer>
+
+---
+
+What if you want to store your graphQL queries in *.graphql files?
+
+---
+
+<CodeSurfer>
+
+```yml showNumbers title="codegen.yml" file="src/step6/codegen.yml" subtitle="Our current codegen configuration"
+```
+
+```yml showNumbers title="codegen.yml" file="src/step7/codegen.yml" subtitle="Configure codegen to look for graphql files"
 ```
 
 </CodeSurfer>
@@ -674,25 +359,10 @@ export function useGetGreenieToyQuery(baseOptions?: Apollo.QueryHookOptions<GetG
 
 <CodeSurfer>
 
-```ts subtitle="Our current code"
-import { GetGreenieToyQuery } from 'schema';
-
-import { useQuery } from '@apollo/client';
-import { loader } from 'graphql.macro';
-
-const GET_DOG_TOY = loader('./getGreenieToy.graphql');
-
-// ...
-
-const { loading, error, data } = useQuery<GetGreenieToyQuery>(GET_DOG_TOY);
+```ts 16:30 showNumbers title="src/App.tsx" file="src/step6/App.tsx" subtitle="Our current code"
 ```
 
-```ts subtitle="Our current code"
-import { useGetGreenieToyQuery } from 'schema';
-
-// ...
-
-const { loading, error, data } = useGetGreenieToyQuery();
+```ts 16 showNumbers title="src/App.tsx" file="src/step7/App.tsx" subtitle="Move the query to a new file - getToysUnderPrice.graphql"
 ```
 
 </CodeSurfer>
