@@ -4,8 +4,8 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "start": "mdx-deck ../graphql-codegen-contentful-mdx-slides/deck.mdx",
-    "build": "mdx-deck build ../graphql-codegen-contentful-mdx-slides/deck.mdx"
+    "start": "mdx-deck deck.mdx",
+    "build": "rimraf docs && mdx-deck build deck.mdx && mv public docs"
   },
   "devDependencies": {
     "code-surfer": "^3.1.1",
