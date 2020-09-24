@@ -1,4 +1,5 @@
 import { Notes, Head } from "mdx-deck";
+import Header from "./components/Header";
 import { CodeSurfer } from "code-surfer";
 import "prismjs/components/prism-typescript";
 import "prismjs/components/prism-tsx";
@@ -32,6 +33,8 @@ import favicon from "./images/favicon.ico";
 
 ---
 
+<Header />
+
 <div style={{ display: 'flex', width: '100%' }}>
 
 <img src={myPic} alt="" style={{ maxHeight: '100vh', maxWidth: '40vw' }} />
@@ -53,13 +56,19 @@ import favicon from "./images/favicon.ico";
 
 ---
 
+<Header />
+
 # Today we'll learn how to...
 
 - Use `codegen` to generate TS definitions from Contentful
 - Utilize TS in conjunction with Apollo
 - Use `codegen` to improve IDE checking of graphQL
 
+<Footer>Rachel Church</Footer>
+
 ---
+
+<Header />
 
 # Want to follow along?
 
@@ -69,11 +78,15 @@ Slide deck: https://summer-of-graphql-mdx-slides.netlify.app/
 
 ---
 
+<Header />
+
 # What is TypeScript?
 
 <img src="https://lh3.googleusercontent.com/Fxmc052uksOtE4K9JsCSoq_5OSDw66TrN9AKT3ML82hJATJfMgiVq1HlEv_lEWcgtN8AWBoqtw=s0" alt="TypeScript is a superset of Javascript" />
 
 ---
+
+<Header />
 
 # Why should you use TypeScript?
 
@@ -89,9 +102,13 @@ Slide deck: https://summer-of-graphql-mdx-slides.netlify.app/
 
 ---
 
+<Header />
+
 # Let's get to it! 👩🏼‍💻
 
 ---
+
+<Header>step1/addTypescript</Header>
 
 <CodeSurfer>
 
@@ -104,6 +121,8 @@ REACT_APP_CONTENTFUL_API_KEY=hOSyAyj25eyBNh3tRBScPJLu40SRSx-EgjWGTdtrA98
 </CodeSurfer>
 
 ---
+
+<Header>step1/addTypescript</Header>
 
 <CodeSurfer>
 
@@ -119,6 +138,8 @@ yarn add -D typescript @types/node @types/react @types/react-dom @types/jest
 
 ---
 
+<Header>step1/addTypescript</Header>
+
 <CodeSurfer>
 
 ```ts 27:32 showNumbers title="src/App.tsx" file="src/step0/App.jsx" subtitle="We already have TS errors!"
@@ -126,9 +147,12 @@ yarn add -D typescript @types/node @types/react @types/react-dom @types/jest
 
 ```ts 26:52 showNumbers title="src/App.tsx" file="src/step1/App.tsx" subtitle="Adding a custom type to define the shape of our state"
 ```
+
 </CodeSurfer>
 
 ---
+
+<Header>step1/addTypescript</Header>
 
 <CodeSurfer>
 
@@ -144,6 +168,8 @@ yarn add -D @graphql-codegen/cli graphql @graphql-codegen/typescript
 
 ---
 
+<Header>step2/addCodegen</Header>
+
 <CodeSurfer>
 
 ```yml showNumbers title="codegen.yml" file="src/step2/codegen.yml" subtitle="Configure codegen"
@@ -152,6 +178,8 @@ yarn add -D @graphql-codegen/cli graphql @graphql-codegen/typescript
 </CodeSurfer>
 
 ---
+
+<Header>step2/addCodegen</Header>
 
 <CodeSurfer>
 
@@ -179,6 +207,8 @@ yarn add -D @graphql-codegen/cli graphql @graphql-codegen/typescript
 
 ---
 
+<Header>step2/addCodegen</Header>
+
 <CodeSurfer>
 
 ```bash title="Restart the app OR run the script to generate src/schema.ts"
@@ -192,6 +222,8 @@ yarn gen
 </CodeSurfer>
 
 ---
+
+<Header>step2/addCodegen</Header>
 
 <CodeSurfer>
 
@@ -209,9 +241,13 @@ yarn gen
 
 ---
 
+<Header>step2/addCodegen</Header>
+
 ### We are still having to manually create types though... 🙍🏼‍♀️
 
 ---
+
+<Header>step3/addApollo</Header>
 
 ## What could Apollo Client give us?
 
@@ -220,6 +256,8 @@ yarn gen
 - Parsing of our graphQL queries
 
 ---
+
+<Header>step3/addApollo</Header>
 
 ## Wait... what exactly is Apollo Client again?
 
@@ -231,6 +269,8 @@ yarn gen
 
 ---
 
+<Header>step3/addApollo</Header>
+
 ```bash title="Install Apollo Client"
 npm install --save-dev @apollo/client
 
@@ -240,6 +280,8 @@ yarn add -D @apollo/client
 ```
 
 ---
+
+<Header>step3/addApollo</Header>
 
 <CodeSurfer>
 
@@ -252,6 +294,8 @@ yarn add -D @apollo/client
 </CodeSurfer>
 
 ---
+
+<Header>step3/addApollo & step4/addVariable</Header>
 
 <CodeSurfer>
 
@@ -274,9 +318,13 @@ yarn add -D @apollo/client
 
 ---
 
+<Header>step5/addOperationsPlugin</Header>
+
 ### Let's utilize codegen to create the types for us 🎉
 
 ---
+
+<Header>step5/addOperationsPlugin</Header>
 
 <CodeSurfer>
 
@@ -292,6 +340,8 @@ yarn add -D @graphql-codegen/typescript-operations
 
 ---
 
+<Header>step5/addOperationsPlugin</Header>
+
 <CodeSurfer>
 
 ```yml showNumbers title="codegen.yml" file="src/step2/codegen.yml" subtitle="Our current codegen configuration"
@@ -304,19 +354,7 @@ yarn add -D @graphql-codegen/typescript-operations
 
 ---
 
-<CodeSurfer>
-
-```bash title="Restart the app OR run the script to re-generate src/schema.ts"
-npm run gen
-
-# or
-
-yarn gen
-```
-
-</CodeSurfer>
-
----
+<Header>step5/addOperationsPlugin</Header>
 
 <CodeSurfer>
 
@@ -330,9 +368,13 @@ yarn gen
 
 ---
 
+<Header>step5/addOperationsPlugin</Header>
+
 ### We can use codegen to simplify this even more! 💁🏼‍♀️
 
 ---
+
+<Header>step6/addApolloPlugin</Header>
 
 <CodeSurfer>
 
@@ -348,6 +390,8 @@ yarn add -D @graphql-codegen/typescript-react-apollo
 
 ---
 
+<Header>step6/addApolloPlugin</Header>
+
 <CodeSurfer>
 
 ```yml showNumbers title="codegen.yml" file="src/step5/codegen.yml" subtitle="Our current codegen configuration"
@@ -360,35 +404,27 @@ yarn add -D @graphql-codegen/typescript-react-apollo
 
 ---
 
+<Header>step6/addApolloPlugin</Header>
+
 <CodeSurfer>
 
-```bash title="Restart the app OR run the script to re-generate src/schema.tsx"
-npm run gen
+```tsx 32 showNumbers title="src/App.tsx" file="src/step5/App.tsx" subtitle="Our current code"
+```
 
-# or
-
-yarn gen
+```tsx 32 showNumbers title="src/App.tsx" file="src/step6/App.tsx" subtitle="Utilizing the types from schema.ts"
 ```
 
 </CodeSurfer>
 
 ---
 
-<CodeSurfer>
-
-```ts 32 showNumbers title="src/App.tsx" file="src/step5/App.tsx" subtitle="Our current code"
-```
-
-```ts 32 showNumbers title="src/App.tsx" file="src/step6/App.tsx" subtitle="Utilizing the types from schema.tsx"
-```
-
-</CodeSurfer>
-
----
+<Header>step7/useGraphqlFile</Header>
 
 ### What if you want to store your graphQL queries in *.graphql files?
 
 ---
+
+<Header>step7/useGraphqlFile</Header>
 
 <CodeSurfer>
 
@@ -402,9 +438,11 @@ yarn gen
 
 ---
 
+<Header>step7/useGraphqlFile</Header>
+
 <CodeSurfer>
 
-```ts 16:30 title="src/App.tsx" file="src/step6/App.tsx" subtitle="Our current code"
+```tsx 16:30 title="src/App.tsx" file="src/step6/App.tsx" subtitle="Our current code"
 ```
 
 ```graphql 1:10 title="src/getToysUnderPrice.graphql" file="src/step7/getToysUnderPrice.graphql" subtitle="Move the query to a new file"
@@ -414,9 +452,13 @@ yarn gen
 
 ---
 
+<Header>step8/IDEGraphqlSupport</Header>
+
 ## Let's add better IDE Support
 
 ---
+
+<Header>step8/IDEGraphqlSupport</Header>
 
 <CodeSurfer>
 
@@ -431,6 +473,22 @@ yarn add -D @graphql-codegen/schema-ast
 </CodeSurfer>
 
 ---
+
+<Header>step8/IDEGraphqlSupport</Header>
+
+<CodeSurfer>
+
+```yml showNumbers title="codegen.yml" file="src/step7/codegen.yml" subtitle="Our current codegen configuration"
+```
+
+```yml showNumbers title="codegen.yml" file="src/step8/codegen.yml" subtitle="Add the schema-ast plugin"
+```
+
+</CodeSurfer>
+
+---
+
+<Header>step8/IDEGraphqlSupport</Header>
 
 <div style={{ display: 'flex', textAlign: 'center' }}>
 <div style={{ width: '50vw', padding: '0 10px' }}>
@@ -453,6 +511,9 @@ yarn add -D @graphql-codegen/schema-ast
 </Notes>
 
 ---
+
+<Header>finalApp</Header>
+
 <div style={{ paddingLeft: '10px' }}>
 <h2 style={{ fontSize: '.8em', margin: '5px 0 0' }}>
   <a href="https://graphql-code-generator.com/docs/plugins/add">add</a>
@@ -485,11 +546,17 @@ yarn add -D @graphql-codegen/schema-ast
 
 ---
 
+<Header>finalApp</Header>
+
 # That's all folks!
 ## 🙌
 
 ---
 
+<Header />
+
 ## Have any follow-up questions?
 
 Feel free to ask me on Twitter! [@RachelWebDev](https://twitter.com/RachelWebDev)
+
+Or leave a git issue on the starter repo! [/rachel-church/summer-of-qraphql](https://github.com/rachel-church/summer-of-qraphql)
