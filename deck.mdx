@@ -4,12 +4,17 @@ import "prismjs/components/prism-typescript";
 import "prismjs/components/prism-tsx";
 import "prismjs/components/prism-graphql";
 
+import myPic from "./images/me.jpg";
+import myPicSmall from "./images/me-small.jpg";
+import favicon from "./images/favicon.ico";
+
 <Head>
   <title>Summer of GraphQL: Auto-generating Typescript for your content model</title>
   <meta property="og:title" content="Auto-generating Typescripts" />
   <meta property="og:description" content="Summer of GraphQL: Auto-generating Typescript for your content model" />
-  <meta property="og:image" content="https://summer-of-graphql-mdx-slides.netlify.app/me-small.jpg" />
+  <meta property="og:image" content={myPicSmall} />
   <meta property="og:url" content="https://github.com/rachel-church/summer-of-qraphql" />
+  <link rel="icon" href={favicon} />
 </Head>
 
 <h1 style={{ fontSize: "1.3em", marginBottom: "16px", textAlign: 'center' }}>
@@ -27,10 +32,24 @@ import "prismjs/components/prism-graphql";
 
 ---
 
-# My name is Rachel
+<div style={{ display: 'flex', width: '100%' }}>
 
-- Twitter: [@RachelWebDev](https://twitter.com/RachelWebDev)
-- Github: [rachel-church](https://github.com/rachel-church)
+<img src={myPic} alt="" style={{ maxHeight: '100vh', maxWidth: '40vw' }} />
+
+<div style={{ paddingLeft: '2em' }}>
+<h1>My name is Rachel</h1>
+
+<p style={{ fontSize: '2em' }}>
+  🧗🏼‍♀️👩🏼‍🍳👩🏼‍💻🧘🏼‍♀️🐈💃
+</p>
+
+<ul>
+  <li>Twitter: <a href="https://twitter.com/RachelWebDev">@RachelWebDev</a></li>
+  <li>Github: <a href="https://github.com/rachel-church">rachel-church</a></li>
+</ul>
+</div>
+
+</div>
 
 ---
 

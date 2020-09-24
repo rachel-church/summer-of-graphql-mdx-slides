@@ -6,7 +6,7 @@
   "scripts": {
     "getSrcFiles": "sh getSrcFiles.sh",
     "start": "mdx-deck deck.mdx -p 9000",
-    "build": "mdx-deck build deck.mdx && cp me.jpg me-small.jpg public/"
+    "build": "mdx-deck build deck.mdx"
   },
   "devDependencies": {
     "code-surfer": "^3.1.1",
