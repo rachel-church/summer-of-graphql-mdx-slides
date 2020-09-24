@@ -1,55 +1,76 @@
-import { Image, Notes, Head } from "mdx-deck";
-import { CodeSurferColumns, CodeSurfer, Step } from "code-surfer";
-import {
-  vsDark,
-  nightOwl,
-} from "@code-surfer/themes";
+import { Notes, Head } from "mdx-deck";
+import { CodeSurfer } from "code-surfer";
+import "prismjs/components/prism-typescript";
+import "prismjs/components/prism-tsx";
+import "prismjs/components/prism-graphql";
 
-export const theme = vsDark;
+<Head>
+  <title>Summer of GraphQL: Auto-generating Typescript for your content model</title>
+  <meta property="og:title" content="Auto-generating Typescripts" />
+  <meta property="og:description" content="Summer of GraphQL: Auto-generating Typescript for your content model" />
+  <meta property="og:image" content="https://summer-of-graphql-mdx-slides.netlify.app/me-small.jpg" />
+  <meta property="og:url" content="https://github.com/rachel-church/summer-of-qraphql" />
+</Head>
 
-import "prismjs/components/prism-typescript"
-import "prismjs/components/prism-tsx"
+<h1 style={{ fontSize: "1.3em", marginBottom: "16px", textAlign: 'center' }}>
+  Auto-generating Typescript for your content model
+</h1>
 
-## Auto-generating Typescript for your content model
-### A workshop by your friends at Clover
+<p style={{ display: "flex", alignItems: 'center', marginTop: 0  }}>
+  <span>A workshop by your friends at</span>&nbsp;&nbsp;
+  <img src="https://www.clover.com/static/media/clover-logo.4204a79c.svg" alt="Clover" style={{ height: '1em' }} />
+</p>
+
+<small style={{ fontSize: ".5em", color: "grey" }}>
+  Use the left/right arrow keys to navigate this <a href="https://github.com/jxnblk/mdx-deck">mdx-deck</a>
+</small>
 
 ---
 
 # My name is Rachel
 
-Contact me with any questions on Twitter! [@RachelWebDev](https://twitter.com/RachelWebDev)
+- Twitter: [@RachelWebDev](https://twitter.com/RachelWebDev)
+- Github: [rachel-church](https://github.com/rachel-church)
 
 ---
 
-# Today we'll learn about...
+# Today we'll learn how to...
 
-- How to use `codegen` to generate TS definitions from your Contentful project
-- How to utilize TS in conjunction with Apollo
-- How to use `codegen` to improve IDE checking of graphQL
+- Use `codegen` to generate TS definitions from Contentful
+- Utilize TS in conjunction with Apollo
+- Use `codegen` to improve IDE checking of graphQL
 
 ---
 
-# Why should you use Typescript?
+# Want to follow along?
 
-- ~15% of all JavaScript bugs can be detected by TypeScript*
-- Static checking from inside your IDE
+Starter code: https://github.com/rachel-church/summer-of-qraphql
+
+Slide deck: https://summer-of-graphql-mdx-slides.netlify.app/
+
+---
+
+# What is TypeScript?
+
+<img src="https://lh3.googleusercontent.com/Fxmc052uksOtE4K9JsCSoq_5OSDw66TrN9AKT3ML82hJATJfMgiVq1HlEv_lEWcgtN8AWBoqtw=s0" alt="TypeScript is a superset of Javascript" />
+
+---
+
+# Why should you use TypeScript?
+
+- Helps to catch bugs and validate code
+- Static checking and code completion from inside your IDE
 - Easier to refactor code without breaking it
 
-*[Per 2017 study](http://earlbarr.com/publications/typestudy.pdf)
+<Notes>
+  - types describe the shape of an object
+  - helps validate code - type inference allows you to get a lot of power without writing additional code
+  - providing better documentation
+</Notes>
 
 ---
 
-<CodeSurfer>
-
-```bash title="Install TypeScript" subtitle="then rename js files & restart the app"
-npm install --save-dev typescript @types/node @types/react @types/react-dom @types/jest
-
-# or
-
-yarn add -D typescript @types/node @types/react @types/react-dom @types/jest
-```
-
-</CodeSurfer>
+# Let's get to it! 👩🏼‍💻
 
 ---
 
@@ -67,13 +88,21 @@ REACT_APP_CONTENTFUL_API_KEY=hOSyAyj25eyBNh3tRBScPJLu40SRSx-EgjWGTdtrA98
 
 <CodeSurfer>
 
-```ts 13:24 showNumbers title="src/App.tsx" file="src/step0/App.jsx" subtitle="Our query to get all toys"
+```bash title="Install TypeScript" subtitle="Pick either npm or yarn, rename js files, then restart the app"
+npm install --save-dev typescript @types/node @types/react @types/react-dom @types/jest
+
+# or
+
+yarn add -D typescript @types/node @types/react @types/react-dom @types/jest
 ```
 
-```ts 42:57 showNumbers title="src/App.tsx" file="src/step0/App.jsx" subtitle="Utilizing fetch to send the request then updating state"
-```
+</CodeSurfer>
 
-```ts 27:32 showNumbers title="src/App.tsx" file="src/step0/App.jsx" subtitle="Our state initialization"
+---
+
+<CodeSurfer>
+
+```ts 27:32 showNumbers title="src/App.tsx" file="src/step0/App.jsx" subtitle="We already have TS errors!"
 ```
 
 ```ts 26:52 showNumbers title="src/App.tsx" file="src/step1/App.tsx" subtitle="Adding a custom type to define the shape of our state"
@@ -147,42 +176,39 @@ yarn gen
 
 <CodeSurfer>
 
-```ts 230:248 showNumbers title="src/schema.ts" file="src/step2/schema.ts"
+```tsx 26:52 showNumbers title="src/App.tsx" file="src/step1/App.tsx" subtitle="Our current code"
+```
+
+```tsx 28:42 showNumbers title="src/App.tsx" file="src/step2/App.tsx" subtitle="Import and use DogToyCollection from schema.ts"
 ```
 
 </CodeSurfer>
 
----
-
-<CodeSurfer>
-
-```ts 26:52 showNumbers title="src/App.tsx" file="src/step1/App.tsx" subtitle="Our current code"
-```
-
-```ts 2,28:42 showNumbers title="src/App.tsx" file="src/step2/App.tsx" subtitle="Import and use DogToyCollection from schema.ts"
-```
-
-```ts 28:42 showNumbers title="src/App.tsx" file="src/step2/App.tsx" subtitle="Using DogToyCollection"
-```
-
-```ts 26:52 showNumbers title="src/App.tsx" file="src/step1/App.tsx" subtitle="Before.."
-```
-
-</CodeSurfer>
+<Notes>
+  We were able to remove 10 lines of boilerplate!
+</Notes>
 
 ---
 
-Can we make this smarter?
+### We are still having to manually create types though... 🙍🏼‍♀️
 
 ---
 
+## What could Apollo Client give us?
+
+- Intelligent caching
+- Less code - utilize the [useQuery](https://www.apollographql.com/docs/react/data/queries/#executing-a-query) hook
+- Parsing of our graphQL queries
+
 ---
 
-What could Apollo Client give us?
+## Wait... what exactly is Apollo Client again?
 
-- parsing of our graphQL queries
-- intelligent caching
-- less code - utilize the useQuery Hook
+<Notes>
+  - open source state management library
+  - helps fetch, cache, and modify data
+  - could have a whole talk on just Apollo
+</Notes>
 
 ---
 
@@ -191,17 +217,17 @@ npm install --save-dev @apollo/client
 
 # or
 
-yarn add -D typescript @apollo/client
+yarn add -D @apollo/client
 ```
 
 ---
 
 <CodeSurfer>
 
-```ts showNumbers title="src/index.tsx" file="src/step2/index.tsx" subtitle="Our current code"
+```tsx showNumbers title="src/index.tsx" file="src/step2/index.tsx" subtitle="Our current code"
 ```
 
-```ts showNumbers title="src/index.tsx" file="src/step3/index.tsx" subtitle="Add and configure ApolloProvider"
+```tsx showNumbers title="src/index.tsx" file="src/step3/index.tsx" subtitle="Add and configure ApolloProvider"
 ```
 
 </CodeSurfer>
@@ -210,32 +236,32 @@ yarn add -D typescript @apollo/client
 
 <CodeSurfer>
 
-```ts 35:71 showNumbers title="src/App.tsx" file="src/step2/App.tsx" subtitle="Our current code"
+```tsx 35:71 showNumbers title="src/App.tsx" file="src/step2/App.tsx" subtitle="Our current code"
 ```
 
-```ts 39 showNumbers title="src/App.tsx" file="src/step3/App.tsx" subtitle="Utilizing apollo client"
+```tsx 39 showNumbers title="src/App.tsx" file="src/step3/App.tsx" subtitle="Utilizing apollo client"
 ```
 
-```ts 16:29 showNumbers title="src/App.tsx" file="src/step3/App.tsx" subtitle="useQuery expects a GraphQL AST"
+```tsx 16:29 showNumbers title="src/App.tsx" file="src/step3/App.tsx" subtitle="useQuery expects a GraphQL AST"
 ```
 
-```ts 18:39 showNumbers title="src/App.tsx" file="src/step3/App.tsx" subtitle="What if we want to add a graphql variable?"
+```tsx 18:39 showNumbers title="src/App.tsx" file="src/step3/App.tsx" subtitle="What if we want to add a graphql variable?"
 ```
 
-```ts 18:47 showNumbers title="src/App.tsx" file="src/step4/App.tsx" subtitle="Declarative usage of graphql variables"
+```tsx 18:47 showNumbers title="src/App.tsx" file="src/step4/App.tsx" subtitle="Declarative usage of graphql variables"
 ```
 
 </CodeSurfer>
 
 ---
 
-Let's utilize codegen to create the types for us
+### Let's utilize codegen to create the types for us 🎉
 
 ---
 
 <CodeSurfer>
 
-```bash title="Install typescript-operations plugin"
+```bash title="Install typescript-operations codegen plugin"
 npm install --save-dev @graphql-codegen/typescript-operations
 
 # or
@@ -275,23 +301,23 @@ yarn gen
 
 <CodeSurfer>
 
-```ts 31:43 showNumbers title="src/App.tsx" file="src/step4/App.tsx" subtitle="Our current code"
+```tsx 31:43 showNumbers title="src/App.tsx" file="src/step4/App.tsx" subtitle="Our current code"
 ```
 
-```ts 31:32 showNumbers title="src/App.tsx" file="src/step5/App.tsx" subtitle="Utilizing the types from schema.ts"
+```tsx 31:32 showNumbers title="src/App.tsx" file="src/step5/App.tsx" subtitle="Utilizing the types from schema.ts"
 ```
 
 </CodeSurfer>
 
 ---
 
-We can use codegen to simplify this even more!
+### We can use codegen to simplify this even more! 💁🏼‍♀️
 
 ---
 
 <CodeSurfer>
 
-```bash title="Install typescript-operations plugin"
+```bash title="Install typescript-react-apollo codegen plugin"
 npm install --save-dev @graphql-codegen/typescript-react-apollo
 
 # or
@@ -334,14 +360,14 @@ yarn gen
 ```ts 32 showNumbers title="src/App.tsx" file="src/step5/App.tsx" subtitle="Our current code"
 ```
 
-```ts showNumbers title="src/App.tsx" file="src/step6/App.tsx" subtitle="Utilizing the types from schema.tsx"
+```ts 32 showNumbers title="src/App.tsx" file="src/step6/App.tsx" subtitle="Utilizing the types from schema.tsx"
 ```
 
 </CodeSurfer>
 
 ---
 
-What if you want to store your graphQL queries in *.graphql files?
+### What if you want to store your graphQL queries in *.graphql files?
 
 ---
 
@@ -359,16 +385,92 @@ What if you want to store your graphQL queries in *.graphql files?
 
 <CodeSurfer>
 
-```ts 16:30 showNumbers title="src/App.tsx" file="src/step6/App.tsx" subtitle="Our current code"
+```ts 16:30 title="src/App.tsx" file="src/step6/App.tsx" subtitle="Our current code"
 ```
 
-```ts 16 showNumbers title="src/App.tsx" file="src/step7/App.tsx" subtitle="Move the query to a new file - getToysUnderPrice.graphql"
+```graphql 1:10 title="src/getToysUnderPrice.graphql" file="src/step7/getToysUnderPrice.graphql" subtitle="Move the query to a new file"
 ```
 
 </CodeSurfer>
 
 ---
 
-What else can `codegen` do?
+## Let's add better IDE Support
 
 ---
+
+<CodeSurfer>
+
+```bash title="Install schema-ast codegen plugin"
+npm install --save-dev @graphql-codegen/schema-ast
+
+# or
+
+yarn add -D @graphql-codegen/schema-ast
+```
+
+</CodeSurfer>
+
+---
+
+<div style={{ display: 'flex', textAlign: 'center' }}>
+<div style={{ width: '50vw', padding: '0 10px' }}>
+  <h2 style={{ fontSize: '1.1em' }}>JetBrains</h2>
+  <h3 style={{ fontSize: '0.8em' }}><a href="https://plugins.jetbrains.com/plugin/8097-js-graphql">JS GraphQL Plugin</a></h3>
+
+  <p style={{ fontSize: '0.7em' }}>GraphQL Config standards <a href="https://github.com/kamilkisiela/graphql-config/tree/legacy#graphql-config">v2</a></p>
+</div>
+
+<div style={{ width: '50vw', padding: '0 10px' }}>
+  <h2 style={{ fontSize: '1.1em' }}>VSCode</h2>
+  <h3 style={{ fontSize: '0.8em' }}><a href="https://marketplace.visualstudio.com/items?itemName=GraphQL.vscode-graphql">GraphQL extension</a></h3>
+
+  <p style={{ fontSize: '0.7em' }}>GraphQL Config standards <a href="https://graphql-config.com/usage">v3</a></p>
+</div>
+</div>
+
+<Notes>
+  Issue to "Add or prepare for support of new GraphQL Config v3": https://github.com/jimkyndemeyer/js-graphql-intellij-plugin/issues/296
+</Notes>
+
+---
+<div style={{ paddingLeft: '10px' }}>
+<h2 style={{ fontSize: '.8em', margin: '5px 0 0' }}>
+  <a href="https://graphql-code-generator.com/docs/plugins/add">add</a>
+</h2>
+<p style={{ fontSize: '.7em', margin: '10px 0' }}>
+  Add custom code to any codegen output
+</p>
+
+<h2 style={{ fontSize: '.8em', margin: '1em 0 0' }}>
+  <a href="https://graphql-code-generator.com/docs/plugins/fragment-matcher">fragment-matcher</a>
+</h2>
+<p style={{ fontSize: '.7em', margin: '10px 0' }}>
+  Useful for using complex interfaces and unions with apollo-client - represents the polymorphic relationships
+</p>
+
+<h2 style={{ fontSize: '.8em', margin: '1em 0 0' }}>
+  <a href="https://graphql-code-generator.com/docs/plugins/typescript-resolvers">typescript-resolvers</a>
+</h2>
+<p style={{ fontSize: '.7em', margin: '10px 0' }}>
+  Generates TS for resolve functions of your GraphQL API
+</p>
+
+<h2 style={{ fontSize: '.8em', margin: '1em 0 0' }}>
+  <a href="https://graphql-code-generator.com/docs/plugins/named-operations-object">named-operations-object</a>
+</h2>
+<p style={{ fontSize: '.7em', margin: '10px 0' }}>
+  Useful when using apollo-client refetchQueries
+</p>
+</div>
+
+---
+
+# That's all folks!
+## 🙌
+
+---
+
+## Have any follow-up questions?
+
+Feel free to ask me on Twitter! [@RachelWebDev](https://twitter.com/RachelWebDev)

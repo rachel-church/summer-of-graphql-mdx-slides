@@ -11,6 +11,7 @@ mkdir -p src/step4
 mkdir -p src/step5
 mkdir -p src/step6
 mkdir -p src/step7
+mkdir -p src/step8
 
 base_url="https://raw.githubusercontent.com/rachel-church/summer-of-qraphql"
 
@@ -36,4 +37,7 @@ curl $base_url/step6/addApolloPlugin/src/App.tsx -o src/step6/App.tsx
 curl $base_url/step6/addApolloPlugin/codegen.yml -o src/step6/codegen.yml
 
 curl $base_url/step7/useGraphqlFile/codegen.yml -o src/step7/codegen.yml
-curl $base_url/step7/useGraphqlFile/App.tsx -o src/step7/App.tsx
+curl $base_url/step7/useGraphqlFile/src/App.tsx -o src/step7/App.tsx
+curl $base_url/step7/useGraphqlFile/src/getToysUnderPrice.graphql -o src/step7/getToysUnderPrice.graphql
+
+curl $base_url/step8/IDEGraphqlSupport/codegen.yml -o src/step8/codegen.yml

@@ -5,8 +5,8 @@
   "license": "MIT",
   "scripts": {
     "getSrcFiles": "sh getSrcFiles.sh",
-    "start": "mdx-deck deck.mdx",
-    "build": "mdx-deck build deck.mdx"
+    "start": "mdx-deck deck.mdx -p 9000",
+    "build": "mdx-deck build deck.mdx && cp me.jpg me-small.jpg public/"
   },
   "devDependencies": {
     "code-surfer": "^3.1.1",
